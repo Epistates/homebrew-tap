@@ -31,11 +31,13 @@ class McpSafari < Formula
     binary = Dir["MCPSafari-*"].first || "mcp-safari"
     bin.install binary => "mcp-safari"
 
-    # Extract and install the Safari extension app bundle
+    # Extract the Safari extension app bundle.
+    # Homebrew's resource.stage strips the single top-level directory (MCPSafari.app),
+    # so inside the block we are already inside the app bundle (Contents/ is here).
+    # We need to copy the staged directory itself as MCPSafari.app.
     resource("extension").stage do
-      (prefix/"MCPSafari.app").mkpath
-      # Use system cp to preserve the app bundle structure and code signature
-      system "cp", "-pR", "MCPSafari.app/", "#{prefix}/MCPSafari.app/"
+      staged = Pathname.pwd
+      system "cp", "-pR", staged.to_s, "#{prefix}/MCPSafari.app"
     end
   end
 
