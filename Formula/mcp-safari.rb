@@ -1,32 +1,52 @@
 class McpSafari < Formula
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
-  url "https://github.com/Epistates/MCPSafari/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "c042ac9b9e75c1523ff578712812eeaa6654fce404ee27e364fdfff28351c702"
+  version "0.1.0"
   license "MIT"
 
-  depends_on xcode: ["16.0", :build]
+  on_macos do
+    if Hardware::CPU.arm?
+      url "https://github.com/Epistates/MCPSafari/releases/download/v0.1.0/MCPSafari-arm64-apple-darwin"
+      sha256 "9d7bbc40afdcf4ab053f8242f1910c8f64367d073ead5198d51e744da8482102"
+
+      resource "extension" do
+        url "https://github.com/Epistates/MCPSafari/releases/download/v0.1.0/MCPSafari-arm64.tar.gz"
+        sha256 "72fc36cefde6a0eb407fe460a8900cc7b3ffd09874a62d79c5ce1f2e0ecf5d2c"
+      end
+    else
+      url "https://github.com/Epistates/MCPSafari/releases/download/v0.1.0/MCPSafari-x86_64-apple-darwin"
+      sha256 "9fc97ab7c1c01b2b573e32a2619d34193bc56a9a0902bd7b7f26687342454576"
+
+      resource "extension" do
+        url "https://github.com/Epistates/MCPSafari/releases/download/v0.1.0/MCPSafari-x86_64.tar.gz"
+        sha256 "1e1f40c6564d0dfab1d56bdf380891c623ebe97e7c3e20f1cf39b0c9abc87e90"
+      end
+    end
+  end
+
   depends_on :macos
 
   def install
-    cd "MCPServer" do
-      system "swift", "build", "-c", "release", "--disable-sandbox"
-      bin.install ".build/release/MCPSafari" => "mcp-safari"
+    # Install the pre-built MCP server binary
+    bin.install Dir["MCPSafari-*"].first => "mcp-safari"
+
+    # Install the Safari extension app
+    resource("extension").stage do
+      prefix.install "MCPSafari.app"
     end
+  end
+
+  def post_install
+    # Open the app to register the extension with Safari
+    system "open", "#{prefix}/MCPSafari.app"
   end
 
   def caveats
     <<~EOS
-      To use mcp-safari, you also need the Safari extension:
+      The MCPSafari extension app has been installed and opened.
+      Enable it in Safari > Settings > Extensions > MCPSafari Extension.
 
-        1. Download MCPSafari.app from the GitHub release:
-           https://github.com/Epistates/MCPSafari/releases/latest
-
-        2. Open MCPSafari.app to register the extension
-
-        3. Enable it in Safari > Settings > Extensions
-
-      Then configure your MCP client:
+      Configure your MCP client:
 
         {
           "mcpServers": {
@@ -39,11 +59,6 @@ class McpSafari < Formula
   end
 
   test do
-    # Send an MCP initialize request and verify the server responds
-    init_msg = '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}'
-    output = shell_output("echo '#{init_msg}' | timeout 5 #{bin}/mcp-safari --port 0 2>/dev/null || true")
-    # If the server responded, it will contain mcp-safari in the output
-    # If it didn't respond (no timeout on macOS), just verify the binary exists
     assert_predicate bin/"mcp-safari", :executable?
   end
 end
