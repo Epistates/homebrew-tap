@@ -27,12 +27,15 @@ class McpSafari < Formula
   depends_on :macos
 
   def install
-    # Install the pre-built MCP server binary
-    bin.install Dir["MCPSafari-*"].first => "mcp-safari"
+    # The bare binary download lands in the staging dir with its original filename
+    binary = Dir["MCPSafari-*"].first || "mcp-safari"
+    bin.install binary => "mcp-safari"
 
-    # Install the Safari extension app
+    # Extract and install the Safari extension app bundle
     resource("extension").stage do
-      prefix.install "MCPSafari.app"
+      (prefix/"MCPSafari.app").mkpath
+      # Use system cp to preserve the app bundle structure and code signature
+      system "cp", "-pR", "MCPSafari.app/", "#{prefix}/MCPSafari.app/"
     end
   end
 
