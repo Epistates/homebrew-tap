@@ -15,6 +15,10 @@ cask "mcp-safari" do
 
   app "MCPSafari.app"
 
+  postflight do
+    system_command "/usr/bin/open", args: ["/Applications/MCPSafari.app"]
+  end
+
   caveats <<~EOS
     Enable the extension in Safari > Settings > Extensions > MCPSafari Extension.
 
