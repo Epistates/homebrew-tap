@@ -1,11 +1,11 @@
 cask "mcp-safari" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.2.1"
-  sha256 arm:   "bc9dfd863519b17f9b9f29bdd4aeb9c58534f2c0bc7a8f8ca52a927613f52cc0",
-         intel: "2f4e9778594d58deec9bac70642cbda251b3963630cd49b6a3f386e2e136edd6"
+  version "0.2.2"
+  sha256 arm:   "8e0506506c2a302753e41ed13f0a3fde971e0f49e8b6823d1701f1f06f2a4244",
+         intel: "9bc7719f0f6b3ef0f3f2ad6daf7ea1af7fc38f4ba536151f7e5c786a4c85e107"
 
-  url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-#{arch}.tar.gz"
+  url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Extension-#{arch}.tar.gz"
   name "MCPSafari"
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
