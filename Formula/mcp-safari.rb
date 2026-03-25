@@ -30,19 +30,26 @@ class McpSafari < Formula
     binary = Dir["MCPSafari-*"].first || "mcp-safari"
     bin.install binary => "mcp-safari"
 
+    # Safari on macOS 26+ requires the app to be in /Applications
+    # to register the extension. Install there instead of the Cellar.
     resource("extension").stage do
       staged = Pathname.pwd
-      system "cp", "-pR", staged.to_s, "#{prefix}/MCPSafari.app"
+      system "cp", "-pR", staged.to_s, "/Applications/MCPSafari.app"
     end
   end
 
   def post_install
-    system "open", "#{prefix}/MCPSafari.app"
+    system "open", "/Applications/MCPSafari.app"
+  end
+
+  def uninstall
+    # Clean up the app from /Applications on uninstall
+    system "rm", "-rf", "/Applications/MCPSafari.app"
   end
 
   def caveats
     <<~EOS
-      The MCPSafari extension app has been installed and opened.
+      The MCPSafari extension app has been installed to /Applications and opened.
       Enable it in Safari > Settings > Extensions > MCPSafari Extension.
 
       Configure your MCP client:
