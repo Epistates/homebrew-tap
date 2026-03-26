@@ -14,8 +14,8 @@ cask "mcp-safari" do
   depends_on formula: "epistates/tap/mcp-safari"
 
   preflight do
+    # Kill running servers so the upgrade can replace the binary cleanly
     system_command "/usr/bin/pkill", args: ["-f", "mcp-safari"], must_succeed: false
-    system_command "/bin/rm", args: ["-rf", "/Applications/MCPSafari.app"], must_succeed: false
   end
 
   app "MCPSafari.app"
