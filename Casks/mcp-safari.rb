@@ -1,9 +1,9 @@
 cask "mcp-safari" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.2.3"
-  sha256 arm:   "0cdf8ce1a74380cc46a96578130b797452ac3f7692f9160d9412530e076a3b1f",
-         intel: "7739cc322c9f46a8ae6a74a0d073b387a8423b4a576bcb869ef1ddda0449f19f"
+  version "0.2.4"
+  sha256 arm:   "672b08fb6e627172a6f2b5e1bbcf4259c3d1ac42441959f0c1e40fe9444a5214",
+         intel: "ad261b37d899ab4899eb2408759e1813a52c9b27dc4fd2565c962c409f9d810c"
 
   url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Extension-#{arch}.tar.gz"
   name "MCPSafari"
@@ -14,9 +14,7 @@ cask "mcp-safari" do
   depends_on formula: "epistates/tap/mcp-safari"
 
   preflight do
-    # Kill any running mcp-safari server processes
     system_command "/usr/bin/pkill", args: ["-f", "mcp-safari"], must_succeed: false
-    # Remove old app if it exists (e.g. from a previous manual install)
     system_command "/bin/rm", args: ["-rf", "/Applications/MCPSafari.app"], must_succeed: false
   end
 
