@@ -1,9 +1,9 @@
 cask "mcp-safari" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.2.4"
-  sha256 arm:   "672b08fb6e627172a6f2b5e1bbcf4259c3d1ac42441959f0c1e40fe9444a5214",
-         intel: "ad261b37d899ab4899eb2408759e1813a52c9b27dc4fd2565c962c409f9d810c"
+  version "0.2.5"
+  sha256 arm:   "ae9e3833b48070d0d1679fe9856a6df8fca606fe2b58341e77c1aac82136bd5d",
+         intel: "ebe73d7945a1a9a34127318e27c90041034e63f29346b7ec84872c2b10938ca9"
 
   url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Extension-#{arch}.tar.gz"
   name "MCPSafari"
