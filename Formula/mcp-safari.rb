@@ -1,20 +1,20 @@
 class McpSafari < Formula
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
-  version "0.2.5"
+  version "0.2.6"
   license "MIT"
+
+  depends_on macos: ">= :sonoma"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.5/MCPSafari-Server-arm64-apple-darwin"
-      sha256 "c2cc938068cde12f1ba4e9da5d8005c5ad7fca7c472749120e80f89d24d49152"
+      url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Server-arm64-apple-darwin"
+      sha256 "dc40c3da1e841f2472a0e2a32fe075c8d9036c92996c82c5a5ba5773301c6c4a"
     else
-      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.5/MCPSafari-Server-x86_64-apple-darwin"
-      sha256 "c9d7d318ef113c120914aff3b4e1426801352ba371047249c0cd78d1863f9a99"
+      url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Server-x86_64-apple-darwin"
+      sha256 "3b6713c638e66f3fd29385ef4d33a23d934f9c048abd84206c78615eda163783"
     end
   end
-
-  depends_on :macos
 
   def install
     binary = Dir["MCPSafari-*"].first || "mcp-safari"
