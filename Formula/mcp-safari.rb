@@ -4,7 +4,7 @@ class McpSafari < Formula
   version "0.2.6"
   license "MIT"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   on_macos do
     if Hardware::CPU.arm?
