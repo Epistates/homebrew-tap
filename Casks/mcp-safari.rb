@@ -21,7 +21,7 @@ cask "mcp-safari" do
   end
 
   postflight do
-    system_command HOMEBREW_BREW_FILE,
+    system_command HOMEBREW_BREW_FILE.to_s,
                    args:         ["link", "--overwrite", "epistates/tap/mcp-safari"],
                    must_succeed: false
     system_command "/usr/bin/open", args: ["/Applications/MCPSafari.app"]
