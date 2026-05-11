@@ -1,0 +1,100 @@
+name: Homebrew tap
+
+on:
+  pull_request:
+    paths:
+      - "Casks/mcp-safari.rb"
+      - "Formula/mcp-safari.rb"
+      - ".github/workflows/homebrew.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "Casks/mcp-safari.rb"
+      - "Formula/mcp-safari.rb"
+      - ".github/workflows/homebrew.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_FROM_API: "1"
+
+jobs:
+  lint:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tap checkout
+        run: |
+          brew untap epistates/tap || true
+          brew tap epistates/tap "$GITHUB_WORKSPACE"
+
+      - name: Lint formula and cask
+        run: |
+          ruby -c Formula/mcp-safari.rb
+          ruby -c Casks/mcp-safari.rb
+          brew style ./Formula/mcp-safari.rb ./Casks/mcp-safari.rb
+          brew audit --formula epistates/tap/mcp-safari --online
+          brew audit --cask epistates/tap/mcp-safari --online
+
+  formula-lifecycle:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tap checkout
+        run: |
+          brew untap epistates/tap || true
+          brew tap epistates/tap "$GITHUB_WORKSPACE"
+
+      - name: Install formula and smoke server
+        run: |
+          brew install --formula epistates/tap/mcp-safari
+          brew test epistates/tap/mcp-safari
+          test -x "$(brew --prefix)/bin/mcp-safari"
+
+          "$(brew --prefix)/bin/mcp-safari" --port 8128 >mcp-safari.log 2>&1 &
+          server_pid="$!"
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for _ in {1..20}; do
+            if grep -q "WebSocket server listening on port 8128" mcp-safari.log; then
+              exit 0
+            fi
+            sleep 0.5
+          done
+
+          cat mcp-safari.log
+          exit 1
+
+  cask-lifecycle:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tap checkout
+        run: |
+          brew untap epistates/tap || true
+          brew tap epistates/tap "$GITHUB_WORKSPACE"
+
+      - name: Install cask and verify server link
+        run: |
+          brew install --cask epistates/tap/mcp-safari
+
+          server_bin="$(brew --prefix)/bin/mcp-safari"
+          test -x "$server_bin"
+
+          link_target="$(readlink "$server_bin")"
+          case "$link_target" in
+            ../Cellar/mcp-safari/*/bin/mcp-safari) ;;
+            *)
+              echo "Unexpected mcp-safari link target: $link_target"
+              exit 1
+              ;;
+          esac
