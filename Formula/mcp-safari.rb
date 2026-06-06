@@ -7,11 +7,11 @@ class McpSafari < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.8/MCPSafari-Server-arm64-apple-darwin"
-      sha256 "78b5126a0c2cd26e892bfa23225124565d8b28a9b61893d9d3e4b887732248df"
+      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.9/MCPSafari-Server-arm64-apple-darwin"
+      sha256 "60085a4543c0f2cf31ed88cfff500319dc282b37c26b506a69bb650356fb54c6"
     else
-      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.8/MCPSafari-Server-x86_64-apple-darwin"
-      sha256 "a139cbcad5e9adb890fb1571739ae566153b34fc05cdfc54919a9d0a8335c831"
+      url "https://github.com/Epistates/MCPSafari/releases/download/v0.2.9/MCPSafari-Server-x86_64-apple-darwin"
+      sha256 "c4bd6b5d7432fddc011de3eea14206bfd551e932908a3bf0045918b2333b167f"
     end
   end
 
