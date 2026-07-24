@@ -18,6 +18,7 @@ class McpSafari < Formula
   def install
     binary = Dir["MCPSafari-*"].first || "mcp-safari"
     bin.install binary => "mcp-safari"
+    (bin/"mcp-safari").chmod 0755
   end
 
   test do
