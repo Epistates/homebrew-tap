@@ -27,7 +27,10 @@ cask "mcp-safari" do
     system_command "/usr/bin/open", args: ["/Applications/MCPSafari.app"]
   end
 
-  zap trash: "~/.config/mcp-safari"
+  zap trash: [
+    "~/Library/Application Support/MCPSafari",
+    "~/.config/mcp-safari",
+  ]
 
   caveats <<~EOS
     Enable the extension in Safari > Settings > Extensions > MCPSafari Extension.
