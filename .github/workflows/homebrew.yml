@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - "Casks/mcp-safari.rb"
-      - "Formula/mcp-safari.rb"
+      - "Formula/mcp-safari-server.rb"
       - ".github/workflows/homebrew.yml"
   push:
     branches: ["main"]
     paths:
       - "Casks/mcp-safari.rb"
-      - "Formula/mcp-safari.rb"
+      - "Formula/mcp-safari-server.rb"
       - ".github/workflows/homebrew.yml"
   workflow_dispatch:
 
@@ -35,10 +35,10 @@ jobs:
 
       - name: Lint formula and cask
         run: |
-          ruby -c Formula/mcp-safari.rb
+          ruby -c Formula/mcp-safari-server.rb
           ruby -c Casks/mcp-safari.rb
-          brew style ./Formula/mcp-safari.rb ./Casks/mcp-safari.rb
-          brew audit --formula epistates/tap/mcp-safari --online
+          brew style ./Formula/mcp-safari-server.rb ./Casks/mcp-safari.rb
+          brew audit --formula epistates/tap/mcp-safari-server --online
           brew audit --cask epistates/tap/mcp-safari --online
 
   formula-lifecycle:
@@ -54,8 +54,8 @@ jobs:
 
       - name: Install formula and smoke server
         run: |
-          brew install --formula epistates/tap/mcp-safari
-          brew test epistates/tap/mcp-safari
+          brew install --formula epistates/tap/mcp-safari-server
+          brew test epistates/tap/mcp-safari-server
           test -x "$(brew --prefix)/bin/mcp-safari"
 
           "$(brew --prefix)/bin/mcp-safari" --port 8128 >mcp-safari.log 2>&1 &
@@ -92,7 +92,7 @@ jobs:
 
           link_target="$(readlink "$server_bin")"
           case "$link_target" in
-            ../Cellar/mcp-safari/*/bin/mcp-safari) ;;
+            ../Cellar/mcp-safari-server/*/bin/mcp-safari) ;;
             *)
               echo "Unexpected mcp-safari link target: $link_target"
               exit 1
