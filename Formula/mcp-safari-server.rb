@@ -1,4 +1,4 @@
-class McpSafari < Formula
+class McpSafariServer < Formula
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
   license "MIT"

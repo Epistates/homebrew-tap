@@ -11,7 +11,7 @@ cask "mcp-safari" do
   homepage "https://github.com/Epistates/MCPSafari"
 
   depends_on macos: :sonoma
-  depends_on formula: "epistates/tap/mcp-safari"
+  depends_on formula: "epistates/tap/mcp-safari-server"
 
   app "MCPSafari.app"
 
@@ -21,15 +21,12 @@ cask "mcp-safari" do
   end
 
   postflight do
-    system_command HOMEBREW_BREW_FILE.to_s,
-                   args:         ["link", "--overwrite", "epistates/tap/mcp-safari"],
-                   must_succeed: false
     system_command "/usr/bin/open", args: ["/Applications/MCPSafari.app"]
   end
 
   zap trash: [
-    "~/Library/Application Support/MCPSafari",
     "~/.config/mcp-safari",
+    "~/Library/Application Support/MCPSafari",
   ]
 
   caveats <<~EOS
