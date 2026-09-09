@@ -20,22 +20,14 @@ cask "mcp-safari" do
     terminate_process "mcp-safari", match: :full
   end
 
-  postflight_steps do
-    # Safari only registers the extension once the container app has run.
-    # Addressed by path, not `open -a`: LaunchServices resolves the bundle ID to
-    # whichever copy it saw last, which on a developer machine is a DerivedData
-    # build rather than the one just installed. Best effort, since failing to
-    # launch the app is not a reason to fail the install.
-    run "/usr/bin/open", args: ["/Applications/MCPSafari.app"], must_succeed: false
-  end
-
   zap trash: [
     "~/.config/mcp-safari",
     "~/Library/Application Support/MCPSafari",
   ]
 
   caveats <<~EOS
-    Enable the extension in Safari > Settings > Extensions > MCPSafari Extension.
+    Open MCPSafari.app once so Safari picks up the extension, then enable it in
+    Safari > Settings > Extensions > MCPSafari Extension.
 
     Configure your MCP client:
 
