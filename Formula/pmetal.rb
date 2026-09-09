@@ -19,8 +19,12 @@ class Pmetal < Formula
   def install
     ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version.to_s
 
+    # serve/mcp are opt-in features so library consumers don't inherit axum and
+    # rmcp, but a user-facing install is expected to carry `pmetal serve` and
+    # `pmetal mcp`. This matches what the GitHub release binary ships.
     system "cargo", "install", "--path", "crates/pmetal",
            "--root", prefix,
+           "--features", "serve,mcp",
            "--locked"
   end
 
@@ -36,6 +40,10 @@ class Pmetal < Formula
       Sampling modes (Qwen3.5):
         pmetal infer --model Qwen/Qwen3.5-0.8B --mode thinking --prompt "..."
         pmetal infer --model Qwen/Qwen3.5-0.8B --mode coding --prompt "..."
+
+      OpenAI-compatible server and MCP server are both included:
+        pmetal serve --model Qwen/Qwen3-0.6B --port 8080
+        pmetal mcp
 
       Full docs: https://github.com/epistates/pmetal
     EOS
