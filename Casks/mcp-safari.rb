@@ -10,8 +10,8 @@ cask "mcp-safari" do
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
 
-  depends_on macos: :sonoma
   depends_on formula: "epistates/tap/mcp-safari-server"
+  depends_on macos: :sonoma
 
   app "MCPSafari.app"
 
