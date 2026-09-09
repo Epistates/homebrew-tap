@@ -1,27 +1,23 @@
 cask "mcp-safari" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.2.9"
-  sha256 arm:   "074c9487997d4bf40b4723af44093bcad3a8ac21247b8783d5347c9fc2a8c1ce",
-         intel: "9983668edc3faad3a32c1c3725722aeae2892de65113ed3c05a7da2a057845e8"
+  version "0.3.0"
+  sha256 arm:   "826e928f11da4c08d91699d64ee8869cec85c55210a60b5391fb4f9766599421",
+         intel: "416f7ee0a5b389ea5003c9550581f68263500f846924babc56af25fb96a2bd8a"
 
   url "https://github.com/Epistates/MCPSafari/releases/download/v#{version}/MCPSafari-Extension-#{arch}.tar.gz"
   name "MCPSafari"
   desc "Native Safari browser automation via the Model Context Protocol"
   homepage "https://github.com/Epistates/MCPSafari"
 
-  depends_on macos: :sonoma
   depends_on formula: "epistates/tap/mcp-safari-server"
+  depends_on macos: :sonoma
 
   app "MCPSafari.app"
 
-  preflight do
+  preflight_steps do
     # Kill running servers so the upgrade can replace the binary cleanly
-    system_command "/usr/bin/pkill", args: ["-f", "mcp-safari"], must_succeed: false
-  end
-
-  postflight do
-    system_command "/usr/bin/open", args: ["/Applications/MCPSafari.app"]
+    terminate_process "mcp-safari", match: :full
   end
 
   zap trash: [
@@ -30,7 +26,8 @@ cask "mcp-safari" do
   ]
 
   caveats <<~EOS
-    Enable the extension in Safari > Settings > Extensions > MCPSafari Extension.
+    Open MCPSafari.app once so Safari picks up the extension, then enable it in
+    Safari > Settings > Extensions > MCPSafari Extension.
 
     Configure your MCP client:
 
