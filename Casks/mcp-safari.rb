@@ -22,8 +22,11 @@ cask "mcp-safari" do
 
   postflight_steps do
     # Safari only registers the extension once the container app has run.
-    # Resolved through LaunchServices so a custom appdir still works.
-    run "/usr/bin/open", args: ["-a", "MCPSafari"]
+    # Addressed by path, not `open -a`: LaunchServices resolves the bundle ID to
+    # whichever copy it saw last, which on a developer machine is a DerivedData
+    # build rather than the one just installed. Best effort, since failing to
+    # launch the app is not a reason to fail the install.
+    run "/usr/bin/open", args: ["/Applications/MCPSafari.app"], must_succeed: false
   end
 
   zap trash: [
