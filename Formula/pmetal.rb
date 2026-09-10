@@ -1,7 +1,8 @@
 class Pmetal < Formula
   desc "High-performance LLM fine-tuning & inference framework for Apple Silicon"
   homepage "https://github.com/epistates/pmetal"
-  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.5.0.tar.gz"
+  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.6.0.tar.gz"
+  # Fill in at tag time: shasum -a 256 on the release tarball.
   sha256 "PLACEHOLDER"
   license any_of: ["MIT", "Apache-2.0"]
   head "https://github.com/epistates/pmetal.git", branch: "main"
@@ -18,6 +19,12 @@ class Pmetal < Formula
 
   def install
     ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version.to_s
+
+    # Link MLX into the binary. A release build otherwise produces
+    # libmlx.dylib and stamps its own absolute build path as the install name;
+    # `cargo install` then discards that build directory, leaving an installed
+    # binary that cannot resolve its own dependency.
+    ENV["PMETAL_MLX_STATIC"] = "1"
 
     # serve/mcp are opt-in features so library consumers don't inherit axum and
     # rmcp, but a user-facing install is expected to carry `pmetal serve` and
