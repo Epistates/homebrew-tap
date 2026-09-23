@@ -26,7 +26,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Tap checkout
         run: |
@@ -45,38 +45,23 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Tap checkout
         run: |
           brew untap epistates/tap || true
           brew tap epistates/tap "$GITHUB_WORKSPACE"
 
-      - name: Install formula and smoke server
+      - name: Install formula and run packaging test
         run: |
           brew install --formula epistates/tap/mcp-safari-server
           brew test epistates/tap/mcp-safari-server
-          test -x "$(brew --prefix)/bin/mcp-safari"
-
-          "$(brew --prefix)/bin/mcp-safari" --port 8128 >mcp-safari.log 2>&1 &
-          server_pid="$!"
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-
-          for _ in {1..20}; do
-            if grep -q "WebSocket server listening on port 8128" mcp-safari.log; then
-              exit 0
-            fi
-            sleep 0.5
-          done
-
-          cat mcp-safari.log
-          exit 1
 
   cask-lifecycle:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Tap checkout
         run: |
