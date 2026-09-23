@@ -22,6 +22,25 @@ class McpSafariServer < Formula
   end
 
   test do
-    assert_predicate bin/"mcp-safari", :executable?
+    require "json"
+    require "timeout"
+
+    IO.popen([bin/"mcp-safari", "--port", free_port.to_s], "r+") do |server|
+      request = {
+        jsonrpc: "2.0", id: 1, method: "initialize",
+        params: { protocolVersion: "2025-11-25", capabilities: {},
+                  clientInfo: { name: "homebrew-test", version: "1.0" } }
+      }
+      server.puts JSON.generate(request)
+      server.flush
+      response = Timeout.timeout(15) { JSON.parse(server.readline) }
+      assert_equal "mcp-safari", response.dig("result", "serverInfo", "name")
+    ensure
+      begin
+        Process.kill("TERM", server.pid)
+      rescue Errno::ESRCH
+        nil
+      end
+    end
   end
 end
