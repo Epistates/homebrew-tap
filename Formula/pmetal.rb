@@ -14,7 +14,8 @@ class Pmetal < Formula
   depends_on :xcode => ["16.0", :build]
 
   # MLX C++ is built from source during cargo build via CMake FetchContent.
-  # The resulting mlx.metallib is cached to ~/.cache/pmetal/lib/ for reuse.
+  # The CLI embeds its mlx.metallib and extracts it on first run to
+  # ~/.cache/pmetal/lib/mlx-<revision>-<sha256>.metallib, one file per MLX build.
   # Future: download prebuilt libmlx.dylib from GitHub releases to skip C++ build.
 
   def install
