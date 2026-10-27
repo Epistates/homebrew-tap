@@ -1,9 +1,8 @@
 class Pmetal < Formula
   desc "High-performance LLM fine-tuning & inference framework for Apple Silicon"
   homepage "https://github.com/epistates/pmetal"
-  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.6.0.tar.gz"
-  # Fill in at tag time: shasum -a 256 on the release tarball.
-  sha256 "PLACEHOLDER"
+  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.7.0.tar.gz"
+  sha256 "b3a0033fdafe416114ad15d4b82d0915caad04f3a38c34a9d2727766985cd343"
   license any_of: ["MIT", "Apache-2.0"]
   head "https://github.com/epistates/pmetal.git", branch: "main"
 
@@ -34,7 +33,7 @@ class Pmetal < Formula
     # with "can't find crate".
 
     # serve/mcp are opt-in features so library consumers don't inherit axum and
-    # rmcp, but a user-facing install is expected to carry `pmetal serve` and
+    # the MCP SDK, but a user-facing install is expected to carry `pmetal serve` and
     # `pmetal mcp`. This matches what the GitHub release binary ships.
     system "cargo", "install", *std_cargo_args(path: "crates/pmetal"), "--features", "serve,mcp"
   end
