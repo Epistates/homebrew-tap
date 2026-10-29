@@ -1,8 +1,8 @@
 class Pmetal < Formula
   desc "High-performance LLM fine-tuning & inference framework for Apple Silicon"
   homepage "https://github.com/epistates/pmetal"
-  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.7.0.tar.gz"
-  sha256 "b3a0033fdafe416114ad15d4b82d0915caad04f3a38c34a9d2727766985cd343"
+  url "https://github.com/epistates/pmetal/archive/refs/tags/v0.7.1.tar.gz"
+  sha256 "3f5ef45bc37fc17c5c638ac28b805fe7898fd8962a6fb0d66d4de31eb422e2bb"
   license any_of: ["MIT", "Apache-2.0"]
   head "https://github.com/epistates/pmetal.git", branch: "main"
 
