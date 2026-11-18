@@ -5,13 +5,18 @@ on:
     paths:
       - "Casks/mcp-safari.rb"
       - "Formula/mcp-safari-server.rb"
+      - "Formula/pmetal.rb"
       - ".github/workflows/homebrew.yml"
   push:
     branches: ["main"]
     paths:
       - "Casks/mcp-safari.rb"
       - "Formula/mcp-safari-server.rb"
+      - "Formula/pmetal.rb"
       - ".github/workflows/homebrew.yml"
+  schedule:
+    # Weekly, so a moved tag or a changed source archive shows up before a user hits it.
+    - cron: "17 6 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -33,13 +38,18 @@ jobs:
           brew untap epistates/tap || true
           brew tap epistates/tap "$GITHUB_WORKSPACE"
 
-      - name: Lint formula and cask
+      - name: Lint formulae and cask
         run: |
           ruby -c Formula/mcp-safari-server.rb
+          ruby -c Formula/pmetal.rb
           ruby -c Casks/mcp-safari.rb
-          brew style ./Formula/mcp-safari-server.rb ./Casks/mcp-safari.rb
+          brew style ./Formula/mcp-safari-server.rb ./Formula/pmetal.rb ./Casks/mcp-safari.rb
           brew audit --formula epistates/tap/mcp-safari-server --online
+          brew audit --formula --strict epistates/tap/pmetal --online
           brew audit --cask epistates/tap/mcp-safari --online
+
+      - name: Fetch pmetal's source and check its sha256
+        run: brew fetch --build-from-source --formula epistates/tap/pmetal
 
   formula-lifecycle:
     runs-on: macos-latest
@@ -83,3 +93,20 @@ jobs:
               exit 1
               ;;
           esac
+
+  pmetal-lifecycle:
+    runs-on: macos-latest
+    # pmetal builds MLX from source; there is no bottle.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Tap checkout
+        run: |
+          brew untap epistates/tap || true
+          brew tap epistates/tap "$GITHUB_WORKSPACE"
+
+      - name: Build pmetal from source and run its test
+        run: |
+          brew install --build-from-source --formula epistates/tap/pmetal
+          brew test epistates/tap/pmetal
