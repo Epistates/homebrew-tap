@@ -106,6 +106,17 @@ jobs:
           brew tap epistates/tap "$GITHUB_WORKSPACE"
           brew trust --tap epistates/tap
 
+      - name: Install Xcode's Metal Toolchain
+        # MLX compiles its kernels with the Metal compiler, a separate Xcode
+        # component since Xcode 26. The image installs it, but some runners come
+        # up without it (actions/runner-images#14013).
+        run: |
+          xcodebuild -version
+          if ! xcrun --sdk macosx metal --version; then
+            xcodebuild -downloadComponent MetalToolchain
+            xcrun --sdk macosx metal --version
+          fi
+
       - name: Build pmetal from source and run its test
         run: |
           brew install --build-from-source --formula epistates/tap/pmetal
