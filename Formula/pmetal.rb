@@ -1,3 +1,27 @@
+# MLX compiles its kernels with `xcrun metal`. Since Xcode 26 the Metal
+# Toolchain is a separate component that a full Xcode install may lack, and the
+# build only finds out minutes in. As a requirement, the check fails the install
+# before Homebrew downloads or builds anything.
+class MetalToolchainRequirement < Requirement
+  fatal true
+
+  satisfy(build_env: false) do
+    system("xcrun", "--sdk", "macosx", "metal", "--version", out: File::NULL, err: File::NULL)
+  end
+
+  def message
+    <<~EOS
+      Xcode's Metal Toolchain is required to compile MLX's Metal kernels.
+      Install it with:
+        xcodebuild -downloadComponent MetalToolchain
+    EOS
+  end
+
+  def display_s
+    "Metal Toolchain"
+  end
+end
+
 class Pmetal < Formula
   desc "High-performance LLM fine-tuning & inference framework for Apple Silicon"
   homepage "https://github.com/epistates/pmetal"
@@ -7,6 +31,7 @@ class Pmetal < Formula
   head "https://github.com/epistates/pmetal.git", branch: "main"
 
   depends_on "cmake" => :build
+  depends_on MetalToolchainRequirement => :build
   depends_on "rust" => :build
   # The Metal compiler builds MLX's kernels.
   depends_on xcode: ["16.0", :build]
